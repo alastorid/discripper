@@ -17,7 +17,7 @@
 	title=${title:0:$len}
 
 	echo "Title set: $title"
-	echo "Start ripping..."
+	echo "Starting ripping..."
 
 	makemkvcon --minlength=1500 -r --decrypt --directio=true mkv disc:0 all /home/share > /dev/null
 
