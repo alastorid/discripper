@@ -1,30 +1,31 @@
 #!/bin/bash
 {
-	
-	echo $(date)
-	
-	isEmpty=$(fdisk -l /dev/sr0) 
+  echo $(date)
 
-	if [ -z "$isEmpty" ]; then
-		echo ">>>Completed (or No disk found)"
-		exit
-	fi
+  echo ">>>Disk found"
+  echo ">>>Setting the title..."
 
-	echo ">>>Disk found"
-	echo ">>>Setting the title..."
+  title=$(makemkvcon -r info)
+  title=`echo "$title" | grep "DRV:0\+"`
+  title=${title:53}
+  len=${#title}-12
+  title=${title:0:$len}
 
-	title=$(makemkvcon -r info disk:0)
-	title=`echo "$title" | grep "DRV:0\+"`
-	title=${title:53}
-	len=${#title}-12
-	title=${title:0:$len}
+  if [[ -z $title ]]; then
+    echo ">>>Couldn't set the title - No disk found"
+    echo ">>>Exit->"
+    exit;
+  else
+    echo ">>>Title set: $title"
+    echo ">>>Starting ripping..."
 
-	echo ">>>Title set: $title"
-	echo ">>>Starting ripping..."
+    makemkvcon --minlength=4800 -r --decrypt --directio=true mkv disc:0 all /home/tishi/raid/share > /dev/null
 
-	makemkvcon --minlength=4800 -r --decrypt --directio=true mkv disc:0 all /home/share > /dev/null
+    mv "/home/user/raid/share/"*.mkv "/home/user/raid/share/"$title.mkv
+    mv "/home/user/raid/share/"$title.mkv "/home/user/raid/share/Movies"
 
-	mv /home/share/Movies/title00.mkv /home/share/Movies/$title.mkv
-	eject
-	echo ">>>title: $title.mkv created."
-} &>> "/user/.diskripper.log" &
+    eject
+    echo ">>>title: $title.mkv created."
+
+fi
+} &>> "/home/user/autorip.log"
