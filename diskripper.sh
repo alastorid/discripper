@@ -19,7 +19,7 @@
     echo ">>>Title set: $title"
     echo ">>>Starting ripping..."
 
-    makemkvcon --minlength=4800 -r --decrypt --directio=true mkv disc:0 all /home/tishi/raid/share > /dev/null
+    makemkvcon --minlength=4800 -r --decrypt --directio=true mkv disc:0 all /home/user/share > /dev/null
 
     mv "/home/user/raid/share/"*.mkv "/home/user/raid/share/"$title.mkv
     mv "/home/user/raid/share/"$title.mkv "/home/user/raid/share/Movies"
